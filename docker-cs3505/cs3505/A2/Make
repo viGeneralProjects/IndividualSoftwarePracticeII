@@ -1,0 +1,30 @@
+#CS3505 A3 Makefile
+
+#Autograder will override this:
+LIBHARU ?= ../libharu
+
+CXX       := g++
+CXXFLAGS  := -Wall -std=c++17 -I$(LIBHARU)/include
+LDFLAGS   := -L$(LIBHARU)/src
+LIBS      := -lhpdf -lpng -lz -lm
+
+#finds sources/objects so any .o files build
+SRCS := $(wildcard *.cpp)
+OBJS := $(SRCS:.cpp=.o)
+
+.PHONY: all clean
+all: sinePDF
+
+sinePDF: $(OBJS)
+	$(CXX) $^ $(LDFLAGS) $(LIBS) -o $@
+
+#Generic compile rule (covers any new .cpp automatically)
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+#Optional: original demo (not phony)
+pdfExample: pdfExample.cpp
+	$(CXX) $(CXXFLAGS) $< $(LDFLAGS) $(LIBS) -o $@
+
+clean:
+	rm -f *.o sinePDF pdfExample
